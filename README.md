@@ -2,7 +2,9 @@
 
 ### Webアプリのデプロイ前に
 1. code.gsの2行目のidを自分のスプレッドシートのIDに置き換えてください
-1. Webアプリのデプロイ後にはまだシートが空白のため、手動でAppScript上で`qiitaCall`を実行してください
+1. AppScriptの左ペインのライブラリから下記ライブラリを追加してください
+   `1ReeQ6WO8kKNxoaA_O0XEQ589cIrRvEBA9qcWpNqdOP17i47u6N9M5Xh0`
+1. シートが空白のため、手動でAppScript上で`qiitaCall`を実行してください
 
    →スプレッドシートに書き込まれることを確認してください
 
