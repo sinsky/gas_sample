@@ -89,22 +89,6 @@ const doGet = (e) => HtmlService.createTemplateFromFile(e.parameter.dev === "tru
 const include = (filename) => HtmlService.createHtmlOutputFromFile(filename).getContent();
 
 /**
- * スプレッドシートのデータを整形してJSONで返す
- *
- * @return {Object} - 任意に整形したデータ（json）
- */
-const getData = () => {
-  const sheetData = {
-    id: "",
-    dataSheetName: "",
-  };
-  const sheets = SpreadsheetApp.openById(sheetData.id);
-  const sheet = sheets.getSheetByName(sheetData.dataSheetName);
-  const data = sheet.getDataRange().getValues();
-  return {data};
-}
-
-/**
  * Date型のオブジェクトをフォーマットする
  * google提供のUtilitiesを用いる
  * https://developers.google.com/apps-script/reference/utilities/utilities#formatdatedate,-timezone,-format
