@@ -1,0 +1,84 @@
+<script>
+  /* googleスクリプトをpromiseで使用 */
+  const googleRuns = (func, ...args) =>
+    new Promise((resolve, reject) =>
+      google.script.run
+        .withSuccessHandler((...e) => resolve(...e))
+        .withFailureHandler((...e) => reject(...e))
+      [func](...args)
+    );
+</script>
+
+<script type="text/babel">
+  const {render} = ReactDOM;
+  const {useState,Fragment} = React;
+  const root = document.querySelector("#root");
+
+  const ButtonGroup = (props) => {
+    const {readButtonHandler,shapingButtonHandler} = props.component;
+    return (
+      <div className="flex">
+        <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white m-4 py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={readButtonHandler}>読み込み</button>
+        <button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white m-4 py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={shapingButtonHandler}>整形</button>
+      </div>
+    );
+  }
+  const PrintDataArea = (props) => {
+  const {sheetData,shaping} = props.component;
+  if(shaping)
+    return(
+      <>
+        <h1 class="font-bold text-3xl text-red-500">ここで印刷用スタイルにつもりが無理だったのでそのまま</h1>
+        {sheetData.map((data,index)=>{
+          const {name,postDate,title,lgtm} = data;
+          return(
+            <dl key={name+"__"+postDate} className={(index+1)%2 === 0 && "bg-yellow-50"}>
+              <dt>名前</dt><dd>{name}</dd>
+              <dt>タイトル</dt><dd>{title}</dd>
+              <dt>投稿日</dt><dd>{postDate}</dd>
+              <dt>LGTM</dt><dd>{lgtm}</dd>
+            </dl>
+          )
+        })}
+      </>
+    )
+  else
+    return (
+      <>
+        {sheetData.map(data=>{
+          const {name,postDate,title,lgtm} = data;
+          return(
+            <dl key={name+"__"+postDate}>
+              <dt>名前</dt><dd>{name}</dd>
+              <dt>タイトル</dt><dd>{title}</dd>
+              <dt>投稿日</dt><dd>{postDate}</dd>
+              <dt>LGTM</dt><dd>{lgtm}</dd>
+            </dl>
+          )
+        })}
+      </>
+    )
+  }
+  const App = () => {
+    const [sheetData,setSheetData] = useState([]);
+    const [shaping,setShaping] = useState(false);
+    const readButtonHandler = async () => {
+      const data = await googleRuns("getSheetData");
+      setSheetData(data.returnDataJSON.data);
+    }
+    const shapingButtonHandler = () => {
+      if(shaping) return;
+      setShaping(true);
+    }
+    const buttonGroupComponent = {readButtonHandler,shapingButtonHandler};
+    const printdataComponent = {sheetData,shaping};
+    return (
+      <div className="flex flex-col">
+        <ButtonGroup component={buttonGroupComponent} />
+        <PrintDataArea component={printdataComponent} />
+      </div>
+    )
+  }
+
+  render(<App />,root);
+</script>
